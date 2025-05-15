@@ -1,0 +1,95 @@
+<footer class="container-fluid text-center p-2 mt-4 bg-success text-white">
+    <p>&copy; 2025 dKin Butterfly Club</p>
+</footer>
+
+
+<!-- Optional JavaScript -->
+<!-- Bootstrap Bundle with Popper -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+    crossorigin="anonymous"></script>
+
+<script>
+    function inputCheck(id) {
+        let forms = document.getElementsByClassName(id)
+        Array.prototype.filter.call(forms, function (form) {
+            form.addEventListener('submit', function (event) {
+                if (form.checkValidity() === false) {
+                    event.preventDefault()
+                    event.stopPropagation()
+                }
+
+                if (id == 'needs-validation-index') {
+                    const checkboxes = document.querySelectorAll('.form-check-input');
+                    let count = 0;
+                    checkboxes.forEach(checkbox => {
+                        if (checkbox.checked) {
+                            count++;
+                        }
+                    });
+
+                    if (count === 0) {
+                        alert('Please select at least 1 favourite butterfly!');
+                        event.preventDefault();
+                    } else if (count > 5) {
+                        alert('Please select at most 5 favourite butterflies!');
+                        event.preventDefault();
+                    }
+                }
+
+                if (id == 'needs-validation-register') {
+                    let firstPwd = document.getElementById('password').value
+                    let rePwd = document.getElementById('repassword').value
+
+                    if (firstPwd != rePwd) {
+                        alert('The two entered passwords do not match. Please re-enter!')
+                        event.preventDefault();
+                    }
+                }
+
+
+                form.classList.add('was-validated')
+            }, false)
+        })
+    }
+
+    function checkPwd() {
+        let firstPwd = document.getElementById('password').value
+        let rePwd = document.getElementById('repassword').value
+
+        if (firstPwd != rePwd) {
+            alert('The two entered passwords do not match. Please re-enter!')
+            location.reload();
+        }
+    }
+
+    function clearText() {
+        location.reload();
+    }
+
+    if('<%= message_prompt %>' == 'invalid'){
+        alert("Sorry, there seems to be a problem with the validationCode you supplied.")
+    }else if ('<%= message_prompt %>' == 'wrong_access') {
+        alert("Sorry, as a member, you are not allowed to view this page.")
+    } else if ('<%= message_prompt %>' == 'already_login_to_login') {
+        alert("Sorry, you have already logged in as a member.")
+    } else if ('<%= message_prompt %>' == 'already_login_to_register') {
+        alert("Sorry, you have already logged in as a member, please exit first and then register.")
+    } else if ('<%= message_prompt %>' == 'visitor_fail_access_member_content') {
+        alert("Sorry, as a visitor, you are not allowed to view this page.")
+    } else if ('<%= message_prompt %>' == 'member_not_exist') {
+        alert("Sorry, the member does not exist, please register first.")
+    } else if ('<%= message_prompt %>' == 'login_wrong_password') {
+        alert("Sorry, the password you provided is wrong, please check again.")
+    } else if ('<%= message_prompt %>' == 'wrong_grantcode') {
+        alert("Sorry, the grantcode you provided is not matched, please check and register again.")
+    } else if ('<%= message_prompt %>' == 'register_existed') {
+        alert("Sorry, the user has already existed, please choose another username or login.")
+    } else if ('<%= message_prompt %>' == 'register_finish') {
+        alert("Congratulation!, you has finished your registration, please login.")
+    }
+    
+</script>
+</body>
+
+</html>

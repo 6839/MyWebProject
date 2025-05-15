@@ -1,0 +1,82 @@
+<%- include('header'); -%>
+    <main>
+        <div class="container">
+            <h3 class="mt-3">Welcome to register as a member of the dKin Butterfly Club!</h3>
+
+            <div class="my-1 p-3 bg-warning">
+                Note: This is the member registration page, which includes a series of security validations 
+                <li>The form cannot be submitted if any input field is empty </li>
+                <li>Using JavaScript to ensure that the two password inputs must match, otherwise, <span class="badge bg-success">alert('The two entered passwords do not match. Please re-enter!')</span></li>
+                <li>To align with actual business logic, an authorization code list (in JSON format) is embedded within the program. Users must enter a valid authorization code from this list to complete registration. If the code is invalid then <span class="badge bg-success">alert("Sorry, the grantcode you provided is not matched, please check and register again.")</span></li>
+                <li>When the form is submitted, the program checks if the username already exists in the database, if it exists then <span class="badge bg-success">alert("Sorry, the user has already existed, please choose another username or login.")</span>, and if it does not exist then <span class="badge bg-success">alert("Congratulation!, you has finished your registration, please login.")</span></li>
+                
+            </div>
+
+            <div class="content-section d-flex flex-grow-1 p-0 my-4">
+                <form
+                    class="login-container needs-validation-register d-flex flex-column justify-content-center align-items-center flex-grow-1 flex-shrink-1"
+                    novalidate action="/memberRegisterSubmit" method="post" id="postLoginForm">
+                    <div class="container">
+                        <div class="form-container">
+                            <div
+                                class="row g-3 d-flex flex-column justify-content-center align-items-center flex-grow-1 flex-shrink-1">
+                                <div class="col-12 w-50 mb-2">
+                                    <label for="username" class="form-label me-2">Username</label>
+                                    <input type="text" class="form-control rounded border border-2" id="username" name="username" required>
+                                    <div class="invalid-feedback">Please add your username.</div>
+                                    <div class="valid-feedback">Looks good!</div>
+                                </div>
+                                <div class="col-12 w-50 mb-2">
+                                    <label for="password" class="form-label me-2">Password</label>
+                                    <input type="password" class="form-control rounded border border-2" id="password" name="password" required>
+                                    <div class="invalid-feedback">Please add your password.</div>
+                                    <div class="valid-feedback">Looks good!</div>
+                                </div>
+                                <div class="col-12 w-50 mb-2">
+                                    <label for="repassword" class="form-label me-2">Confirm Password</label>
+                                    <input type="password" class="form-control rounded border border-2" id="repassword" name="repassword" required>
+                                    <div class="invalid-feedback">Please confirm your password.</div>
+                                    <div class="valid-feedback">Looks good!</div>
+                                </div>
+
+                                <div class="col-12 w-50 mb-2">
+                                    <label for="email" class="form-label me-2">Email</label>
+                                    <input type="email" class="form-control border border-2" id="email" name="email"
+                                            title="Provide your email xxxx@deakin.edu.au" autocomplete="off" required>
+                                            <div class="invalid-feedback">Please add a valid email address.</div>
+                                    <div class="valid-feedback">Looks good!</div>
+                                </div>
+
+                                <div class="col-12 w-50 mb-2">
+                                    <label for="grantcode" class="form-label me-2">GrantCode</label>
+                                    <input type="text" class="form-control rounded border border-2" id="grantcode" name="grantcode" required>
+                                    <div class="invalid-feedback">Please add your grantcode.</div>
+                                    <div class="valid-feedback">Looks good!</div>
+                                </div>
+
+                                <!-- <div class="col-12 w-50 mb-2">
+                                    <label for="validationCode" class="form-label me-2">ValidationCode: <label class="fst-italic bg-info fw-bold fs-5"><%- verificationCode 
+                                        %> </label></label>
+                                    <input type="text" id="validationCode" class="form-control" name="validationCode"
+                                        required>
+                                    <div class="invalid-feedback">Please input the validation code.</div>
+                                    <div class="valid-feedback">Looks good!</div>
+                                </div> -->
+
+                                <div class="text-center mt-4">
+                                    <div class="btn-row d-flex flex-column align-items-center">
+                                        <div class="col-12 button-section w-50">
+                                            <button type="submit" class="btn btn-primary mb-2 w-50"
+                                            onclick="inputCheck('needs-validation-register')">Register</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <%- include('footer'); -%>

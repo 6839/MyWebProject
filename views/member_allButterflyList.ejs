@@ -1,0 +1,74 @@
+<%- include('header'); -%>
+  <main>
+    <div class="container">
+      <h3>All butterflies in our library:</h3>
+
+      <div class="my-1 p-3 bg-warning">
+        Note:
+        <li>When this page initializes, the program queries all butterfly data from the database and displays it in a
+          list</li>
+        <li>The JavaScript <span class="badge bg-success">pagination</span> component is used to implement paginated
+          display</li>
+      </div>
+
+      <!-- table showing result of survey-->
+      <div class="my-4">
+        <table class="table table-bordered table-striped table-hover">
+          <tr class="text-center">
+            <th>Id</th>
+            <th>Common Name</th>
+            <th>Scientific Name</th>
+            <th>imgSrc</th>
+            <th>sumLike</th>
+          </tr>
+
+          <% for( let i=0; i< butterflyList.length;i++){ %>
+            <tr>
+              <td>
+                <%= butterflyList[i].id %>
+              </td>
+              <td>
+                <%= butterflyList[i].commonName %>
+              </td>
+              <td>
+                <%= butterflyList[i].scientificName %>
+              </td>
+              <td>
+                <%= butterflyList[i].imgSrc %>
+              </td>
+              <td>
+                <div class="badge bg-primary">
+                  <%= butterflyList[i].sumLike %>
+                </div>
+
+              </td>
+            </tr>
+            <% } %>
+        </table>
+
+        <nav aria-label="Page navigation">
+          <ul class="pagination justify-content-center">
+            <li class="page-item <%= currentPage === 1? 'disabled' : '' %>">
+              <a class="page-link" href="?page=1" aria-label="Previous">
+                <span aria-hidden="true">&laquo;</span>
+              </a>
+            </li>
+            <% for (let i=1; i <=totalPages; i++) { %>
+              <li class="page-item <%= currentPage === i? 'active' : '' %>">
+                <a class="page-link" href="?page=<%= i %>">
+                  <%= i %>
+                </a>
+              </li>
+              <% } %>
+                <li class="page-item <%= currentPage === totalPages? 'disabled' : '' %>">
+                  <a class="page-link" href="?page=<%= totalPages %>" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                  </a>
+                </li>
+          </ul>
+        </nav>
+      </div>
+    </div>
+  </main>
+
+  <%- include('footer'); -%>

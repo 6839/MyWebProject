@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+
+  <title>
+    <%= title %>
+  </title>
+  <style>
+    #bgDiv {
+      background-size: contain; 
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <div class="container-fluid bg-success-subtle mb-4" id="bgDiv">
+      <div class="col-sm-8 mx-auto text-center pt-4">
+        <h1 class="display-6">dKin Butterfly Club</h1>
+        <p class="lead">Informative web page on Butterflies from around the world</p>
+      </div>
+      <div class="container d-flex justify-content-end">
+        <div class="mb-2 mx-2 px-2 fst-italic fs-5">Current role:
+          <span class="badge bg-danger">
+          <%  if(role == 0){ %>
+            visitor
+            <% }else{ %>
+              member
+              <% } %>
+            </span></div>
+        
+      </div>
+      <div class="container d-flex justify-content-end">
+
+        <% if(displayNote){ %>
+        <p class="my-1 p-3 bg-warning">
+          Note: Two user roles are implemented: <span class="badge bg-success">visitor</span> and <span class="badge bg-success">member</span>. 
+        </p>
+        <% } %>
+
+      </div>
+      <div class="container d-flex justify-content-end">
+        <%  if(role == 0){ %>
+        <a class="btn btn-info mb-1 mx-2 px-2 " href="/">Home</a>
+        <a class="btn btn-info mb-1 mx-2 px-2 " href="/memberLogin">Member Login</a>
+        <a class="btn btn-info mb-1 mx-2 px- " href="/memberRegister">Member Register</a>
+        <% }else{ %>
+          <a class="btn btn-info mb-1 mx-2 px-2 " href="/surveyRecords">Survey Records</a>
+          <a class="btn btn-info mb-1 mx-2 px-2 " href="/butterflyLibrary">Butterfly Library</a>
+          <a class="btn btn-info mb-1 mx-2 px-3 " href="/exit"> Exit </a>
+          <% } %>
+
+      </div>
+
+      <% if(displayNote){ %>
+      <div class="container d-flex justify-content-end">
+        <p class="my-1 p-3 bg-warning">
+          Note: Before logging in, users see the interface with options: <span class="badge bg-success">Home</span>, <span class="badge bg-success">Member Login</span>, and <span class="badge bg-success">Member Register</span>. After logging in, they are redirected to the member interface, which includes <span class="badge bg-success">Survey Records</span>, <span class="badge bg-success">Butterfly Library</span>, and <span class="badge bg-success">Exit</span>. The two types of users cannot directly access each other's pages, otherwise, an alert() error prompt will appear.
+        </p>
+      </div>
+      <% } %>
+
+    </div>
+
+    <% if(displayNote){ %>
+    <p class="my-1 p-3 bg-warning">
+      Note: The header above automatically changes its background image every 2 seconds. Here's how it works: during page initialization, all butterfly image data is retrieved from the database. Then define the <span class="badge bg-success">changeBackground()</span> function, which updates the header's background using <span class="badge bg-success">bgDiv.style.backgroundImage = `url('${allButterflySrc[currentIndex]}')`</span>. Finally, <span class="badge bg-success">setInterval(changeBackground, 2000)</span> is used to execute this function every 2 seconds, cycling through the images.
+    </p>
+    <% } %>
+
+  </header>
+
+  <script>
+    const allButterflySrc = '<%= allButterflySrc %>'.split(",");
+    let currentIndex = 0;
+    const bgDiv = document.getElementById('bgDiv');
+
+    function changeBackground() {
+      bgDiv.style.backgroundImage = `url('${allButterflySrc[currentIndex]}')`;
+      currentIndex = (currentIndex + 1) % allButterflySrc.length; 
+    }
+
+    setInterval(changeBackground, 2000); 
+
+  </script>

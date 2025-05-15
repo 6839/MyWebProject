@@ -1,0 +1,57 @@
+<%- include('header'); -%>
+
+    <main>
+        <div class="container">
+            <h3 class="mt-3">Please login for more information:</h3>
+
+            <div class="my-1 p-3 bg-warning">
+                Note: This is the user login page with a series of validations 
+                <li>After the user fills in the form and submits it, the program first checks if the username exists in the database. If it does not exist, then <span class="badge bg-success">alert("Sorry, the member does not exist, please register first.")</span></li>
+                <li>If it exists, the program will continue to verify whether the entered password matches the encrypted ciphertext stored in the database. If they do not match, then <span class="badge bg-success">alert("Sorry, the password you provided is wrong, please check again.")</span>. If they match, the user will be redirected to the member page</li>
+                <li>At the same time, input validation has been added using JavaScript to ensure that the form cannot be submitted if any input field is empty.</li>
+            </div>
+
+            <div class="content-section d-flex flex-grow-1 p-0 my-4">
+                <form
+                    class="login-container needs-validation-login d-flex flex-column justify-content-center align-items-center flex-grow-1 flex-shrink-1"
+                    novalidate action="/memberLoginSubmit" method="post" id="postLoginForm">
+                    <div class="container">
+                        <div class="form-container">
+                            <div
+                                class="row g-3 d-flex flex-column justify-content-center align-items-center flex-grow-1 flex-shrink-1">
+                                <div class="col-12 w-50 mb-2">
+                                    <label for="username" class="form-label me-2">Username</label>
+                                    <input type="text" class="form-control rounded border border-2" id="username" name="username"
+                                        required>
+                                    <div class="invalid-feedback">Please add your username.</div>
+                                    <div class="valid-feedback">Looks good!</div>
+                                </div>
+                                <div class="col-12 w-50 mb-2">
+                                    <label for="password" class="form-label me-2">Password</label>
+                                    <input type="password" class="form-control rounded border border-2" id="password" name="password"
+                                        required>
+                                    <div class="invalid-feedback">Please add your password.</div>
+                                    <div class="valid-feedback">Looks good!</div>
+                                </div>
+
+                                <div class="text-center mt-4">
+                                    <div class="btn-row d-flex flex-column align-items-center">
+                                        <div class="col-12 button-section w-50">
+                                            <button type="submit" class="btn btn-primary mb-2 w-50"
+                                                onclick="inputCheck('needs-validation-login')">Login</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+
+
+
+        </div>
+    </main>
+
+    <%- include('footer'); -%>

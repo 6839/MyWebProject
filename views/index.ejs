@@ -1,0 +1,151 @@
+<%- include('header'); -%>
+    <main>
+        <div class="container">
+            <h3 class="mt-3">dKin Butterfly Club: Survey</h3>
+
+            <p>
+                We are always looking for feedback from our <strong>dKin Butterfly Club</strong> community.
+                Please take a moment to complete this <em>web-based form</em>
+                below to provide us with recent butterfly experiences.
+            </p>
+
+            <h5>Survey Form</h5>
+            <p>
+                Please complete the form below to provide the <strong>dKin Butterfly Club</strong> with your thoughts:
+            </p>
+
+            <div id="formContainer">
+                <form action="/surveySubmit" class="needs-validation-index" novalidate method="post" id="postSurveyForm">
+                    <div class="row mb-3">
+                        <label for="inputFirstname" class="col-sm-3 pt-2 col-form-label-sm text-sm-end">
+                            Firstname:
+                        </label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control border border-2" id="inputFirstname" name="firstname"
+                                title="Provide your firstname" required>
+                            <div class="invalid-feedback">Please add your firstname.</div>
+                            <div class="valid-feedback">Looks good!</div>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <label for="inputLastname" class="col-sm-3 pt-2 col-form-label-sm text-sm-end">
+                            Lastname:
+                        </label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control  border border-2" id="inputLastname" name="lastname"
+                                title="Provide your lastname" required>
+                            <div class="invalid-feedback">Please add your lastname.</div>
+                            <div class="valid-feedback">Looks good!</div>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <label for="inputEmail" class="col-sm-3 pt-2 col-form-label-sm text-sm-end">
+                            Email:
+                        </label>
+                        <div class="col-sm-9">
+                            <input type="email" class="form-control  border border-2" id="inputEmail" name="email"
+                                title="Provide your email xxxx@deakin.edu.au" autocomplete="off" required>
+                            <div class="invalid-feedback">Please add a valid email address.</div>
+                            <div class="valid-feedback">Looks good!</div>
+                        </div>
+                    </div>
+
+                    <p class="mb-3 p-3 bg-warning">
+                        Note: The above three input fields are all equipped with validation. Users can only submit after entering content in the specified format. This is achieved through the <span class="badge bg-success">novalidate</span>, <span class="badge bg-success">valid-feedback</span>, <span class="badge bg-success">invalid-feedback</span> classes in Bootstrap and JavaScript.
+                    </p>
+
+                    <div class="row mb-3">
+                        <label for="inputFavourite" class="col-sm-3 pt-2 col-form-label-sm text-sm-end">
+                            Select your favourite butterflies <br>(up to 5):
+                        </label>
+                        <div class="col-sm-9">
+                            <div class="accordion" id="butterflyAccordion">
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header" id="headingOne">
+                                        <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                                            data-bs-target="#collapseOne">
+                                        </button>
+                                    </h2>
+                                    <div id="collapseOne" class="accordion-collapse collapse"
+                                        data-bs-parent="#butterflyAccordion">
+                                        <div class="accordion-body d-flex flex-wrap">
+                                            <% for(let i=0; i < butterflyList.length; i++){ %>
+                                                <div class="col-md-3 mb-2">
+                                                    <img src="<%= butterflyList[i].imgSrc %>"
+                                                        alt="<%= butterflyList[i].commonName %>"
+                                                        class="img-fluid img-thumbnail card-img-top">
+                                                    <div class="text-center">
+                                                        <input type="checkbox" id="<%= butterflyList[i].id %>"
+                                                            name="<%= butterflyList[i].id %>"
+                                                            class="form-check-input">
+                                                        <label for="<%= butterflyList[i].commonName %>"
+                                                            class="text-secondary form-check-label">
+                                                            <%= butterflyList[i].commonName %>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                <% } %>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <p class="mb-3 p-3 bg-warning">
+                        Note: The dropdown menu above is implemented using Bootstrap. The data within it (butterfly photos and names) is retrieved from the database and displayed during page initialization.
+                        Validation has been added to ensure that users can only select a minimum of 1 and a maximum of 5 items; otherwise, the form cannot be submitted. This functionality is implemented using JavaScript.
+                    </p>
+
+                    <div class="row mb-2">
+                        <label class="col-sm-3 col-form-label-sm text-sm-end" for="comments">Comments:</label>
+                        <div class="col-sm-9">
+                            <textarea rows="3" class="form-control  border border-2" id="comments" name="comments"
+                                placeholder="Please provide a few words to describe your favourite butterfly memory..."></textarea>
+                        </div>
+                    </div>
+
+                    <div class="row mt-3 p-1 me-1 border border-2 rounded">
+                        <div class="col-md-auto">
+                            <label for="validationCode" class="col-form-label">Please enter the code matched from the
+                                image:</label>
+                        </div>
+                        <div class="col-md-auto">
+                            <input type="text" id="validationCode" class="form-control" name="validationCode" required>
+                            <div class="invalid-feedback">Please input the validation code.</div>
+                            <div class="valid-feedback">Looks good!</div>
+                        </div>
+                        <div class="col-md-auto">
+                            <label class="fst-italic bg-info fw-bold fs-4 p-1 mx-2"><%- verificationCode %></label>
+                        </div>
+                    </div>
+                    <p class="my-3 p-3 bg-warning">
+                        Note: The verification code function here works as follows: when the page initializes, a random verification code is generated and stored in a global variable. Refer to the code:
+                        <span class="badge bg-success">
+                        for (let i = 0; i < 6; i++) {
+                            code += Math.floor(Math.random() * 10);
+                          }
+                        </span>
+                        When the form is submitted, it checks if the user's input matches the value stored in the global variable. If they match, the form can be submitted; if not, an error message will be displayed using <span class="badge bg-success">alert()</span>
+                    </p>
+
+                    <div class="row mt-4">
+                        <div class="col-sm mx-auto d-flex justify-content-center ">
+                            <!-- <button type="submit" class="btn btn-primary">Submit</button> -->
+                            <button type="submit" class="btn btn-primary"
+                                                onclick="inputCheck('needs-validation-index')">Submit</button>
+                        </div>
+                        <div class="col-sm mx-auto d-flex justify-content-center">
+                            <button type="reset" class="btn btn-primary" onclick="clearText()">Reset</button>
+                        </div>
+                    </div>
+
+
+                </form>
+            </div>
+
+        </div>
+    </main>
+
+
+    <%- include('footer'); -%>

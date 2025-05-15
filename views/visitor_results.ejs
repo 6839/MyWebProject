@@ -1,0 +1,72 @@
+<%- include('header'); -%>
+    <main>
+        <div class="container">
+            <h3>Survey form submitted successfully!</h3>
+            <p>
+                A summary of the surveys you submitted is shown below:
+            </p>
+
+            <!-- table showing result of survey-->
+            <div>
+                <table class="table table-bordered">
+                    <tr>
+                        <td><strong>Survey Completed</strong></td>
+                        <td>
+                            <%= Result_Completed_Time %>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong>Firstname</strong></td>
+                        <td>
+                            <%= Result_Firstname %>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong>Lastname</strong></td>
+                        <td>
+                            <%= Result_Lastname %>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong>Email</strong></td>
+                        <td>
+                            <%= Result_Email %>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong>Your favourite butterflies</strong></td>
+                        <td>
+                            <div class="d-flex flex-wrap">
+                                <% for(let i=0; i < butterflyList.length; i++){ %>
+                                    <div class="col-md-3 mb-2">
+                                        <img src="<%= butterflyList[i].imgSrc %>"
+                                            alt="<%= butterflyList[i].commonName %>"
+                                            class="img-fluid img-thumbnail card-img-top">
+                                        <div class="text-center">
+                                            <label for="<%= butterflyList[i].commonName %>"
+                                                class="text-secondary form-check-label">
+                                                <%= butterflyList[i].commonName %>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <% } %>
+                            </div>
+                            <p class="my-1 p-3 bg-warning">
+                                Note: After the user submits the survey, the program stores the butterflies selected by the user into the database. Subsequently, the system retrieves this data from the database and displays it here.
+                              </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong>Comments</strong></td>
+                        <td>
+                            <%= Result_Comments %>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+
+        </div>
+
+    </main>
+
+    <%- include('footer'); -%>

@@ -1,0 +1,78 @@
+<%- include('header'); -%>
+    <main>
+        <div class="container">
+            <h3>All survey records from user:</h3>
+
+            <div class="my-1 p-3 bg-warning">
+                Note: 
+                <li>When this page initializes, the program queries all surveys data from the database and displays it in a list. Then, the program queries the database again and sorts the butterflies by the number of user likes, displaying the top three</li>
+                <li>Additionally, the JavaScript <span class="badge bg-success">badge</span> component is used to optimize the display effect of the content</li>
+            </div>
+
+            <!-- table showing result of survey-->
+            <div class="my-4">
+                <table class="table table-bordered table-striped table-hover">
+                    <tr class="text-center">
+                        <th>Id</th>
+                        <th>Firstname</th>
+                        <th>Lastname</th>
+                        <th>Email</th>
+                        <th>Favouritebutterflylist</th>
+                        <th>Comment</th>
+                        <th>Committime</th>
+                    </tr>
+                    <% for( let i=0; i< survey_records.length;i++){ %>
+                        <tr>
+                            <td>
+                                <%= survey_records[i].id %>
+                            </td>
+                            <td>
+                                <%= survey_records[i].firstname %>
+                            </td>
+                            <td>
+                                <%= survey_records[i].lastname %>
+                            </td>
+                            <td>
+                                <%= survey_records[i].Email %>
+                            </td>
+                            <td>
+                                <div class="badge bg-primary">
+                                    <%= survey_records[i].favouritebutterflylist %>
+                                </div>
+                            </td>
+                            <td>
+                                <%= survey_records[i].comment %>
+                            </td>
+                            <td>
+                                <%= survey_records[i].committime %>
+                            </td>
+                        </tr>
+                        <% } %>
+                </table>
+            </div>
+
+            <h3 class="mt-4">Top 3 most favorite butterflies:</h3>
+            <div class="d-flex flex-wrap justify-content-center">
+                <% for(let i=0; i < favourite_butterflyList.length; i++){ %>
+                    <div class="col-md-3 mb-2">
+                        <img src="<%= favourite_butterflyList[i].imgSrc %>"
+                            alt="<%= favourite_butterflyList[i].commonName %>"
+                            class="img-fluid img-thumbnail card-img-top">
+                        <div class="text-center">
+                            <label for="<%= favourite_butterflyList[i].commonName %>"
+                                class="text-secondary form-check-label">
+                                <%= favourite_butterflyList[i].commonName %>
+                                    <br>FavouriteNum: <span class="badge bg-primary">
+                                        <%= favourite_butterflyList[i].sumLike %>
+                                    </span>
+                            </label>
+                        </div>
+                    </div>
+                    <% } %>
+            </div>
+
+        </div>
+
+    </main>
+
+    <%- include('footer'); -%>

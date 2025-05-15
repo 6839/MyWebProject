@@ -42,10 +42,10 @@ const connection = mysql.createConnection({
 
 connection.connect((err) => {
   if (err) {
-    console.error('连接失败: ', err.stack);
+    console.error('Connection failed: ', err.stack);
     return;
   }
-  console.log('成功连接，ID: ', connection.threadId);
+  console.log('Connection successful, ID: ', connection.threadId);
 });
 
 function runMysqlQuery(sql, params = []) {

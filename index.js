@@ -32,29 +32,41 @@ function generateVerificationCode(code) {
   return code;
 }
 
-const mysql = require('mysql');
-const connection = mysql.createConnection({
-  host: 'localhost',
-  user: 'root',
-  password: 'root',
-  database: 'sit774'
-});
-
-connection.connect((err) => {
-  if (err) {
-    console.error('Connection failed: ', err.stack);
-    return;
+// connect to database
+let sqlite3 = require('sqlite3').verbose()
+let db = new sqlite3.Database(
+  'myButterflyDB',
+  sqlite3.OPEN_READWRITE,
+  (err) => {
+    if (err) {
+      console.error('Cannot open database:', err.message);
+      return;
+    }
+    console.log('Successfully connected to database.');
   }
-  console.log('Connection successful, ID: ', connection.threadId);
-});
+);
 
-function runMysqlQuery(sql, params = []) {
+// encapsulate SQL query operation for all matched records 
+function runQueryAll(sql, params = []) {
   return new Promise((resolve, reject) => {
-    connection.query(sql, params, (err, results) => {
+    db.all(sql, params, (err, row) => {
       if (err) {
         reject(err);
       } else {
-        resolve(results);
+        resolve(row);
+      }
+    });
+  });
+}
+
+// encapsulate SQL insert operation
+function runExecute(sql, params = []) {
+  return new Promise((resolve, reject) => {
+    db.run(sql, params, function (err) {
+      if (err) {
+        reject(err);
+      } else {
+        resolve();
       }
     });
   });
@@ -67,7 +79,7 @@ app.get('/', async (req, res, next) => {
   }
 
   if (req.session.isFirstAccess) {
-    req.session.allimgSrc = await runMysqlQuery('select imgSrc from butterfly');
+    req.session.allimgSrc = await runQueryAll('select imgSrc from butterfly');
     req.session.allButterflySrc = req.session.allimgSrc.map(row => row.imgSrc);
     req.session.role = 0;
     req.session.isFirstAccess = false;
@@ -76,7 +88,7 @@ app.get('/', async (req, res, next) => {
   if (req.session.role == 0) {
     req.session.visit_verificationCode = '';
     req.session.visit_verificationCode = generateVerificationCode(req.session.visit_verificationCode);
-    const total_butterfly = await runMysqlQuery('select * from butterfly');
+    const total_butterfly = await runQueryAll('select * from butterfly');
     res.render('index', {
       title: 'dKin BC Survey',
       butterflyList: total_butterfly,
@@ -120,21 +132,21 @@ app.post('/surveySubmit', async (req, res, next) => {
     let seconds = String(myDate.getSeconds()).padStart(2, '0');
 
     // call insert function to store data to database
-    await runMysqlQuery('insert into survey (firstname, lastname, Email, favouritebutterflylist, comment, committime) VALUES (?,?,?,?,?,?)', [
+    await runExecute('insert into survey (firstname, lastname, Email, favouritebutterflylist, comment, committime) VALUES (?,?,?,?,?,?)', [
       inputFirstname,
       inputLastname,
       inputEmail,
       inputFavouriteButterfly.toString(),
       inputComments,
-      myDate
+      myDate.toString()
     ]);
 
     for (let i = 0; i < inputFavouriteButterfly.length; i++) {
-      await runMysqlQuery('update butterfly set sumLike = sumLike + 1 where id = ?', [inputFavouriteButterfly[i]]);
+      await runExecute('update butterfly set sumLike = sumLike + 1 where id = ?', [inputFavouriteButterfly[i]]);
     }
 
     // query user total numbers of survey from database
-    user_butterfly = await runMysqlQuery('select * from butterfly where id in (?)', [inputFavouriteButterfly]);
+    user_butterfly = await runQueryAll('select * from butterfly where id in (?)', [inputFavouriteButterfly]);
 
     // render result by using data above
     res.render('visitor_results', {
@@ -176,7 +188,7 @@ app.post('/memberLoginSubmit', async (req, res, next) => {
   let inputUsername = req.body.username;
   let inputPassword = btoa(req.body.password);
 
-  member_check = await runMysqlQuery('select * from member where username = ?', [inputUsername]);
+  member_check = await runQueryAll('select * from member where username = ?', [inputUsername]);
   if (member_check.length == 0) {
     req.session.message_prompt = 'member_not_exist';
     res.redirect('/memberLogin');
@@ -217,17 +229,17 @@ app.post('/memberRegisterSubmit', async (req, res, next) => {
   let GrantCodeList = require('./GrantCode.json')
 
   if (GrantCodeList.Codelist.includes(inputGrantCode)) {
-    member_check = await runMysqlQuery('select * from member where username = ?', [inputUsername]);
+    member_check = await runQueryAll('select * from member where username = ?', [inputUsername]);
     if (member_check.length != 0) {
       req.session.message_prompt = 'register_existed';
       res.redirect('/memberRegister');
     } else {
-      await runMysqlQuery('insert into member (username, password, email, grandCode, registertime) VALUES (?,?,?,?,?)', [
+      await runExecute('insert into member (username, password, email, grandCode, registertime) VALUES (?,?,?,?,?)', [
         inputUsername,
         inputPassword,
         inputEmail,
         inputGrantCode,
-        new Date()
+        new Date().toString()
       ]);
       req.session.message_prompt = 'register_finish'
       res.redirect('/memberRegister');
@@ -240,8 +252,8 @@ app.post('/memberRegisterSubmit', async (req, res, next) => {
 
 app.get('/surveyRecords', async (req, res, next) => {
   if (req.session.role == 1) {
-    req.session.survey_records = await runMysqlQuery('select * from survey');
-    req.session.favourite_butterflyList = await runMysqlQuery('select * from butterfly order by sumlike desc limit 3;');
+    req.session.survey_records = await runQueryAll('select * from survey');
+    req.session.favourite_butterflyList = await runQueryAll('select * from butterfly order by sumlike desc limit 3;');
     res.render('member_surveyRecords', {
       title: 'dKin BC Survey',
       survey_records: req.session.survey_records,
@@ -264,12 +276,12 @@ app.get('/butterflyLibrary', async (req, res, next) => {
     req.session.offset = (req.session.page - 1) * req.session.pageSize; 
   
     // query total rows
-    req.session.totalCountRes = await runMysqlQuery('select count(*) as total from butterfly');
+    req.session.totalCountRes = await runQueryAll('select count(*) as total from butterfly');
     req.session.totalCount = req.session.totalCountRes[0].total;
     req.session.totalPages = Math.ceil(req.session.totalCount / req.session.pageSize); // calculate total page number
   
     // query current page data
-    req.session.butterflyList = await runMysqlQuery(`select * from butterfly limit ${req.session.offset}, ${req.session.pageSize}`);
+    req.session.butterflyList = await runQueryAll(`select * from butterfly limit ${req.session.offset}, ${req.session.pageSize}`);
   
     res.render('member_allButterflyList', {
       title: 'dKin BC Survey',
@@ -301,15 +313,11 @@ app.get('/exit', async (req, res, next) => {
 app.get('/membersapi', async (req, res, next) => {
   // Retrieve data from table User on the server 
   // and return it in a JSON response
-  req.session.members_rows = await runMysqlQuery('select * from member');
+  req.session.members_rows = await runQueryAll('select * from member');
   res.json(req.session.members_rows)
 });
 
-// Tell our application to listen to requests at port 3000 on the localhost
-app.listen(port, () => {
-  // When the application starts, print to the console that our app is
-  // running at http://localhost:3000. Print another message indicating
-  // how to shut the server down.
-  console.log(`Web server running at: http://localhost:${port}`)
-  console.log(`Type Ctrl+C to shut down the web server`)
+
+app.listen(process.env.PORT || port, function(){
+	console.log('Example app listening on port!')
 })

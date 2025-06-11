@@ -1,7 +1,7 @@
 # MyWebProject
 
 More details:
-    refer to <Project Summary.pdf>
+    refer to "Project Summary.pdf"
 
 
 Required NodeJS module:

@@ -2,7 +2,7 @@
 
 More details:
 
-[Project Summary.pdf](./Project Summary.pdf)
+[Project Summary.pdf](https://github.com/6839/MyWebProject/blob/43a4c33c7803d15f85546cab27a20986dfa3d069/Project%20Summary.pdf)
 
 
 Required NodeJS module: 

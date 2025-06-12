@@ -4,7 +4,9 @@ More details:
 
 [Project Summary.pdf](Project Summary.pdf)
 
-
+```html
+<a href="Project Summary.pdf">Project Summary.pdf</a>
+```
 
 Required NodeJS module: 
 

@@ -1,7 +1,12 @@
 # MyWebProject
 
 More details:
+<<<<<<< HEAD
     refer to [Project Summary.pdf](Project Summary.pdf)
+=======
+    refer to "Project Summary.pdf"
+
+>>>>>>> d9b5838a6c7e2e7f5c5cc46801c66489a737905e
 
 Required NodeJS module:
     ejs@3.1.10
